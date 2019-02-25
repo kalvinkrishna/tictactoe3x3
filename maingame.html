@@ -8,37 +8,51 @@
 
     <script src="js/vue.js"></script>
     <link rel='stylesheet prefetch' href='https://getbootstrap.com/2.3.2/assets/css/bootstrap.css'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
-    
 </head>
 <body >
-    <section id="gametictactoe">
+    <section id="gametictactoe" class='container-fluid'>
             <div id="tic-tac-toe">
-                    <div class="span3 new_span">
-                    <div class="row">
-                    <h1 class="span3">Tic Tac Toe</h1>
-                    <div class="span3">
-                    <div class="input-prepend input-append">
-                        <span class="add-on win_text">O won</span><strong id="o_win" class="win_times add-on">{{ player[0].skor}}</strong><span class="add-on">time(s)</span>
-                        </div>
-                        <div class="input-prepend input-append">
-                        <span class="add-on win_text">X won</span><strong id="x_win" class="win_times add-on">{{ player[1].skor}}</strong><span class="add-on">time(s)</span>
-                        </div>
-                    </div>
+                    <h1 class="title text-center">Tic Tac Toe</h1>
             </div>  
-            <button v-on:click="startGame($event)">Start Game</button>
-            <ul class="row" id="game">
-                    <list-item 
-                        v-for="n in game.gameBoard * game.gameBoard"  
-                        v-bind:id="n"
-                        :key="n"
-                        @click.native="tictactoe($event)"
-                    >
-                    </list-item>
-            </ul>
+           
+            <div class="row">
+                <button v-on:click="startGame($event)" class='btn btn-ready text-center span3'>Start Game</button>
+               
+            </div>
 
-            <div class="row"><a href="#" id="reset" class="btn-success btn span3" >Restart</a></div></div>
+            <div class="row  score">
+                 <div class="input-group input-group-sm mb-3 col-1">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroup-sizing-sm">Board Size</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" :placeholder="game.gameBoard" v-model:game.gameBoard='game.gameBoard'> 
+                       
+                </div>
+                <div class='clearfix'></div>
+                <div class="input-group input-group-sm mb-3 col-2">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroup-sizing-sm">O won</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" :value="player[0].skor" readonly> 
+                </div>
+                <div class="input-group input-group-sm mb-3 col-2">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroup-sizing-sm">X won</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" :value='player[1].skor' readonly>
+                 
+                </div>
+            </div>
 
+            <div id='board'>
+                   
+            </div>
+           
+           <div class='row'>
+                <a href="#" id="reset" class="btn-success btn span3" v-on:click="resetGame($event)">Restart</a></div>
+           </div>
     </section>
   
 </body>

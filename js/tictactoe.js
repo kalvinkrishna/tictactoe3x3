@@ -1,16 +1,16 @@
 
-var componentList = Vue.component('list-item', {
+var componentList = Vue.component('board-item', {
     
     model : {
         props : ['click'],
         event : 'click'
     },
-    template: ' <li class="btn span1">+</li>',
+    template: ' <div class="board">+</div>',
 })
 
 let player = [
-    { id: "player1", skor: 0, turn: 1 , listTicTact : [], symbol: 'o'},
-    { id: "player2", skor: 0, turn: 0 , listTicTact : [], symbol: 'x'}
+    { id: "player1", skor: 0, turn: 1 , listTicTact : [], symbol: 'o', playercolor: 'red'},
+    { id: "player2", skor: 0, turn: 0 , listTicTact : [], symbol: 'x', playercolor: 'blue'}
 ];
 
 var appComponent = new Vue ({
@@ -42,8 +42,38 @@ var appComponent = new Vue ({
             this.isStart = true,
             this.minWinningTurn = (this.game.gameBoard * 2) - 1;
             $(event.target).html("Game Start");
+            this.generateBoard();
+
+            $("#reset").show();
         },
-        resetGame(){
+        generateBoard(){
+            
+            var frame = document.getElementById('board');
+            frame.style.width = (this.game.gameBoard * 100) + "px";
+            frame.style.height = (this.game.gameBoard * 100) + "px";
+            frame.innerHTML = "";
+
+            for(var i=1;i<= Math.pow(this.game.gameBoard,2) ; i++){
+                frame.innerHTML += '<div class="boardcell" id='+i+'></div>';
+            }
+         
+            var boardcell = document.getElementsByClassName('boardcell');
+
+            var self = this;
+           
+            for(var i = 0 ; i< Math.pow(this.game.gameBoard,2); i++){
+                    boardcell[i].addEventListener('click',function(){
+                        self.tictactoe();
+                    });
+            }
+            
+            
+        },
+        changeColor: function(){
+
+        },
+        resetGame : function(){
+            var frame = document.getElementById('board');
             $("#game li").text("+");
             $("#game li").removeClass('disable')
             $("#game li").removeClass('o')
@@ -54,19 +84,28 @@ var appComponent = new Vue ({
             this.player.forEach(element => {
                 element.listTicTact = [];
             });
-
+            frame.innerHTML = "";
             this.game.turn = 0;
             this.gameReset = false;
+            $("#reset").hide();
+            
         },
-        tictactoe: function(events){
+        tictactoe: function(){
+            
             if(this.isStart){
                 if($(event.target).hasClass('disable')){
                     alert('Already selected');
                 } else {
                     $(event.target).addClass('disable o btn-primary');
-                    $(event.target).text(this.player[this.game.turn % 2].symbol);
+                    $(event.target).html("<span>"+this.player[this.game.turn % 2].symbol+"</span>");
                     
                     let turnPlayer = this.player[this.game.turn % 2];
+
+                    $(event.target).css({
+                        "backgroundColor" : ""+turnPlayer.playercolor,
+                        "background-image": "none",    
+                    });
+                    
               
                      //butuh pengambilan status dari tombol yang di klik
                     turnPlayer.listTicTact.push(parseInt(event.target.id));
@@ -93,7 +132,7 @@ var appComponent = new Vue ({
                 var status = false;
                 this.listingWinning.forEach(element => {
                     let intersectionValue = this.intersection(element,player.listTicTact);
-                    intersectionValue.length === 3 ? status = true : false;
+                    intersectionValue.length === this.game.gameBoard ? status = true : false;
                 });
                 return status;
             } else {
